@@ -323,7 +323,7 @@ class TestZapCommon(unittest.TestCase):
     def test_zap_tune(self):
         """Tune makes expected API calls."""
         zap = Mock()
-        
+
         zap.pscan.disable_all_tags.return_value = "OK"
         zap.pscan.set_max_alerts_per_rule.return_value = "OK"
 

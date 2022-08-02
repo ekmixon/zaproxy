@@ -54,28 +54,24 @@ def match_alert_pattern (alert, pattern, element):
 		return re.search(pattern.get(element), alert.get(element))
 	return True	# No such pattern matches all
 
-def match_alerts (alert, pattern):
+def match_alerts(alert, pattern):
 	if ( not match_alert_pattern (alert, pattern, "alert")):
 		return False
 	if ( not match_alert_pattern (alert, pattern, "url")):
 		return False
 	if ( not match_alert_pattern (alert, pattern, "reliability")):
 		return False
-	if ( not match_alert_pattern (alert, pattern, "risk")):
-		return False
-	if ( not match_alert_pattern (alert, pattern, "param")):
-		return False
-	return True
+	return (
+		bool(match_alert_pattern(alert, pattern, "param"))
+		if match_alert_pattern(alert, pattern, "risk")
+		else False
+	)
 
 # Returns a list of the alerts which dont match the 'ignoreAlerts' - a dictionary of regex patterns
-def strip_alerts (alerts, ignoreAlerts):
+def strip_alerts(alerts, ignoreAlerts):
 	stripped = []
 	for alert in alerts:
-		include = True
-		for ignore in ignoreAlerts:
-			if ( match_alerts(alert, ignore)):
-				include = False
-				break
+		include = not any(( match_alerts(alert, ignore)) for ignore in ignoreAlerts)
 		if (include):
 			stripped.append(alert)
 	return stripped

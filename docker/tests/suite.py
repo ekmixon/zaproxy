@@ -12,8 +12,8 @@ def module_name_to_class(module_name):
 
 
 def get_test_cases(directory):
-    directory = directory[0:-1] if directory[-1:] is '/' else directory
-    tests = glob(directory + '/test_*.py')
+    directory = directory[:-1] if directory[-1:] is '/' else directory
+    tests = glob(f'{directory}/test_*.py')
     test_list = []
     for module_path in tests:
         module_name = os.path.basename(module_path).replace('.py', '')
@@ -24,7 +24,7 @@ def get_test_cases(directory):
         # add a default priority
         if not hasattr(klass, 'priority'):
             klass.priority = 1000
-        
+
         test_list.append(klass)
     # lower priority number ... the sooner it gets loaded
     return sorted(test_list, key=lambda k: k.priority, reverse=False)
@@ -40,6 +40,6 @@ def run_tests(directory="./"):
 if __name__ == '__main__':
     tests_dir = os.path.dirname(os.path.realpath(__file__))
     # Include modules from parent directory
-    sys.path.append("{}/..".format(tests_dir))
+    sys.path.append(f"{tests_dir}/..")
     sys.exit(run_tests(tests_dir).wasSuccessful() is False)
     

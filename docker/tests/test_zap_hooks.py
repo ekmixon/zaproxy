@@ -12,7 +12,7 @@ import zap_common
 
 @contextlib.contextmanager
 def custom_hooks_file(content=None):
-    hooks = content if content else "def custom_hook():\n    pass"
+    hooks = content or "def custom_hook():\n    pass"
     with tempfile.NamedTemporaryFile() as file:
         file.write(hooks.encode())
         file.flush()
